@@ -23,17 +23,53 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
+
+import java.util.Currency;
 import java.util.List;
 import java.util.Locale;
 import org.junit.Test;
 
+import com.neovisionaries.i18n.CountryCode.Assignment;
+
 
 public class CountryCodeTest
 {
+	private static CountryCodeInterface createUserAssignedCountryCode() {
+		return new CountryCodeInterface() {
+			public String getName() {
+				return "USER_COUNTRY_CODE_1";
+			}
+
+			public String getAlpha2() {
+				return "ZZ";
+			}
+
+			public String getAlpha3() {
+				return "ZZZ";
+			}
+
+			public int getNumeric() {
+				return 999;
+			}
+
+			public Assignment getAssignment() {
+				return Assignment.USER_ASSIGNED;
+			}
+
+			public Locale toLocale() {
+				return null;
+			}
+
+			public Currency getCurrency() {
+				return null;
+			}
+		};
+	}
+
     @Test
     public void test1()
     {
-        List<CountryCode> list = CountryCode.findByName(".*United.*");
+        List<CountryCodeInterface> list = CountryCode.findByName(".*United.*");
 
         assertEquals(6, list.size());
 
@@ -185,6 +221,7 @@ public class CountryCodeTest
     {
         assertNull(getByCode(""));
     }
+<<<<<<< a311dca4c95035391e90c7b5fba18fa4faa0ff26
 
 
     @Test
@@ -378,4 +415,39 @@ public class CountryCodeTest
         assertEquals(826, CountryCode.UK.getNumeric());
         assertEquals(180, CountryCode.ZR.getNumeric());
     }
+=======
+    
+	@Test
+	public void testUserAssignedCountryCodeGetByCodeAlpha2() {
+		final CountryCodeInterface expected = createUserAssignedCountryCode();
+		CountryCode.addUserAssigned(expected);
+		final CountryCodeInterface actual = CountryCode.getByCode("ZZ");
+		assertEquals("ZZ", actual.getAlpha2());
+		assertEquals("ZZZ", actual.getAlpha3());
+		assertEquals(999, actual.getNumeric());
+		assertEquals(Assignment.USER_ASSIGNED, actual.getAssignment());
+	}
+
+	@Test
+	public void testUserAssignedCountryCodeGetByCodeAlpha3() {
+		final CountryCodeInterface expected = createUserAssignedCountryCode();
+		CountryCode.addUserAssigned(expected);
+		final CountryCodeInterface actual = CountryCode.getByCode("ZZZ");
+		assertEquals("ZZ", actual.getAlpha2());
+		assertEquals("ZZZ", actual.getAlpha3());
+		assertEquals(999, actual.getNumeric());
+		assertEquals(Assignment.USER_ASSIGNED, actual.getAssignment());
+	}
+
+	@Test
+	public void testUserAssignedCountryCodeGetByCodeNumeric() {
+		final CountryCodeInterface expected = createUserAssignedCountryCode();
+		CountryCode.addUserAssigned(expected);
+		final CountryCodeInterface actual = CountryCode.getByCode(999);
+		assertEquals("ZZ", actual.getAlpha2());
+		assertEquals("ZZZ", actual.getAlpha3());
+		assertEquals(999, actual.getNumeric());
+		assertEquals(Assignment.USER_ASSIGNED, actual.getAssignment());
+	}
+>>>>>>> Support user-assigned country codes. (See issue #25.)
 }

@@ -107,7 +107,7 @@ import java.util.regex.Pattern;
  *
  * @author Takahiko Kawasaki
  */
-public enum CountryCode
+public enum CountryCode implements CountryCodeInterface
 {
 
     /**
@@ -2223,16 +2223,21 @@ public enum CountryCode
         NOT_USED
     }
 
-
-    private static final Map<String, CountryCode> alpha3Map = new HashMap<String, CountryCode>();
-    private static final Map<String, CountryCode> alpha4Map = new HashMap<String, CountryCode>();
-    private static final Map<Integer, CountryCode> numericMap = new HashMap<Integer, CountryCode>();
-
+    private static final Map<String, CountryCodeInterface> alpha2Map = new HashMap<String, CountryCodeInterface>();
+    private static final Map<String, CountryCodeInterface> alpha3Map = new HashMap<String, CountryCodeInterface>();
+    private static final Map<String, CountryCodeInterface> alpha4Map = new HashMap<String, CountryCodeInterface>();
+    private static final Map<Integer, CountryCodeInterface> numericMap = new HashMap<Integer, CountryCodeInterface>();
+    private static final List<CountryCodeInterface> standardAndUserAssignedCodes = new ArrayList<CountryCodeInterface>();
 
     static
     {
         for (CountryCode cc : values())
         {
+            if (cc.getAlpha2() != null)
+            {
+                alpha2Map.put(cc.getAlpha2(), cc);
+            }
+
             if (cc.getAlpha3() != null)
             {
                 alpha3Map.put(cc.getAlpha3(), cc);
@@ -2242,6 +2247,8 @@ public enum CountryCode
             {
                 numericMap.put(Integer.valueOf(cc.getNumeric()), cc);
             }
+            
+            standardAndUserAssignedCodes.add(cc);
         }
 
         // FI and SF have the same alpha-3 code "FIN". FI should be used.
@@ -2293,6 +2300,8 @@ public enum CountryCode
      *
      * @return
      *         The country name.
+     *         
+     * @see com.neovisionaries.i18n.CountryCodeInterface#getName()
      */
     public String getName()
     {
@@ -2309,6 +2318,8 @@ public enum CountryCode
      *         >ISO 3166-1 alpha-2</a> code.
      *         {@link CountryCode#UNDEFINED} returns {@code "UNDEFINED"}
      *         which is not an official ISO 3166-1 alpha-2 code.
+     *         
+     * @see com.neovisionaries.i18n.CountryCodeInterface#getAlpha2()
      */
     public String getAlpha2()
     {
@@ -2326,6 +2337,8 @@ public enum CountryCode
      *         Some country codes reserved exceptionally (such as {@link #EU})
      *         returns {@code null}.
      *         {@link CountryCode#UNDEFINED} returns {@code null}, too.
+     *         
+     * @see com.neovisionaries.i18n.CountryCodeInterface#getAlpha3()
      */
     public String getAlpha3()
     {
@@ -2343,6 +2356,8 @@ public enum CountryCode
      *         Country codes reserved exceptionally (such as {@link #EU})
      *         returns {@code -1}.
      *         {@link CountryCode#UNDEFINED} returns {@code -1}, too.
+     *
+     * @see com.neovisionaries.i18n.CountryCodeInterface#getNumeric()
      */
     public int getNumeric()
     {
@@ -2358,6 +2373,8 @@ public enum CountryCode
      *
      * @see <a href="http://en.wikipedia.org/wiki/ISO_3166-1_alpha-2#Decoding_table"
      *       >Decoding table of ISO 3166-1 alpha-2 codes</a>
+     *
+     * @see com.neovisionaries.i18n.CountryCodeInterface#getAssignment()
      */
     public Assignment getAssignment()
     {
@@ -2440,6 +2457,8 @@ public enum CountryCode
      *
      * @return
      *         A {@code Locale} instance that matches this {@code CountryCode}.
+     *
+     * @see com.neovisionaries.i18n.CountryCodeInterface#toLocale()
      */
     public Locale toLocale()
     {
@@ -2479,6 +2498,8 @@ public enum CountryCode
      * @since 1.4
      *
      * @see Currency#getInstance(Locale)
+     *
+     * @see com.neovisionaries.i18n.CountryCodeInterface#getCurrency()
      */
     public Currency getCurrency()
     {
@@ -2521,7 +2542,7 @@ public enum CountryCode
      *
      * @see #getByCode(String, boolean)
      */
-    public static CountryCode getByCode(String code)
+    public static CountryCodeInterface getByCode(String code)
     {
         return getByCode(code, true);
     }
@@ -2551,7 +2572,7 @@ public enum CountryCode
      *
      * @see #getByCode(String, boolean)
      */
-    public static CountryCode getByCodeIgnoreCase(String code)
+    public static CountryCodeInterface getByCodeIgnoreCase(String code)
     {
         return getByCode(code, false);
     }
@@ -2582,7 +2603,7 @@ public enum CountryCode
      * @return
      *         A {@code CountryCode} instance, or {@code null} if not found.
      */
-    public static CountryCode getByCode(String code, boolean caseSensitive)
+    public static CountryCodeInterface getByCode(String code, boolean caseSensitive)
     {
         if (code == null)
         {
@@ -2633,7 +2654,7 @@ public enum CountryCode
      *
      * @see Locale#getCountry()
      */
-    public static CountryCode getByLocale(Locale locale)
+    public static CountryCodeInterface getByLocale(Locale locale)
     {
         if (locale == null)
         {
@@ -2686,26 +2707,19 @@ public enum CountryCode
     }
 
 
-    private static CountryCode getByAlpha2Code(String code)
+    private static CountryCodeInterface getByAlpha2Code(String code)
     {
-        try
-        {
-            return Enum.valueOf(CountryCode.class, code);
-        }
-        catch (IllegalArgumentException e)
-        {
-            return null;
-        }
+        return alpha2Map.get(code);
     }
 
 
-    private static CountryCode getByAlpha3Code(String code)
+    private static CountryCodeInterface getByAlpha3Code(String code)
     {
         return alpha3Map.get(code);
     }
 
 
-    private static CountryCode getByAlpha4Code(String code)
+    private static CountryCodeInterface getByAlpha4Code(String code)
     {
         return alpha4Map.get(code);
     }
@@ -2772,7 +2786,7 @@ public enum CountryCode
      *         A {@code CountryCode} instance, or {@code null} if not found.
      *         If 0 or a negative value is given, {@code null} is returned.
      */
-    public static CountryCode getByCode(int code)
+    public static CountryCodeInterface getByCode(int code)
     {
         if (code <= 0)
         {
@@ -2806,7 +2820,7 @@ public enum CountryCode
      *
      * @since 1.11
      */
-    public static List<CountryCode> findByName(String regex)
+    public static List<CountryCodeInterface> findByName(String regex)
     {
         if (regex == null)
         {
@@ -2857,16 +2871,16 @@ public enum CountryCode
      *
      * @since 1.11
      */
-    public static List<CountryCode> findByName(Pattern pattern)
+    public static List<CountryCodeInterface> findByName(Pattern pattern)
     {
         if (pattern == null)
         {
             throw new IllegalArgumentException("pattern is null.");
         }
 
-        List<CountryCode> list = new ArrayList<CountryCode>();
+        List<CountryCodeInterface> list = new ArrayList<CountryCodeInterface>();
 
-        for (CountryCode entry : values())
+        for (CountryCodeInterface entry : standardAndUserAssignedCodes)
         {
             // If the name matches the given pattern.
             if (pattern.matcher(entry.getName()).matches())
@@ -2876,5 +2890,25 @@ public enum CountryCode
         }
 
         return list;
+    }
+    
+    public static void addUserAssigned(CountryCodeInterface code)
+    {
+	standardAndUserAssignedCodes.add(code);
+
+	if (!alpha3Map.containsKey(code.getAlpha3()))
+	{
+	    alpha3Map.put(code.getAlpha3(), code);
+	}
+
+	if (!alpha2Map.containsKey(code.getAlpha2()))
+	{
+	    alpha2Map.put(code.getAlpha2(), code);
+	}
+
+	if (!numericMap.containsKey(code.getNumeric()))
+	{
+	    numericMap.put(code.getNumeric(), code);
+	}
     }
 }
