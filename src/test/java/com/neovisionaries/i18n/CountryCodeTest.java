@@ -415,36 +415,36 @@ public class CountryCodeTest
         assertEquals(180, CountryCode.ZR.getNumeric());
     }
     
-	@Test
-	public void testUserAssignedCountryCodeGetByCodeAlpha2() {
-		final CountryCodeInterface expected = createUserAssignedCountryCode();
-		CountryCode.addUserAssigned(expected);
-		final CountryCodeInterface actual = CountryCode.getByCode("ZZ");
-		assertEquals("ZZ", actual.getAlpha2());
-		assertEquals("ZZZ", actual.getAlpha3());
-		assertEquals(999, actual.getNumeric());
-		assertEquals(Assignment.USER_ASSIGNED, actual.getAssignment());
-	}
+    @Test
+    public void testUserAssignedCountryCodeGetByCodeAlpha2() {
+        final CountryCodeInterface expected = createUserAssignedCountryCode();
+        CountryCode.addUserAssigned(expected);
+        final CountryCodeInterface actual = CountryCode.getByCode("ZZ");
+        assertEquals("ZZ", actual.getAlpha2());
+        assertEquals("ZZZ", actual.getAlpha3());
+        assertEquals(999, actual.getNumeric());
+        assertEquals(Assignment.USER_ASSIGNED, actual.getAssignment());
+    }
 
-	@Test
-	public void testUserAssignedCountryCodeGetByCodeAlpha3() {
-		final CountryCodeInterface expected = createUserAssignedCountryCode();
-		CountryCode.addUserAssigned(expected);
-		final CountryCodeInterface actual = CountryCode.getByCode("ZZZ");
-		assertEquals("ZZ", actual.getAlpha2());
-		assertEquals("ZZZ", actual.getAlpha3());
-		assertEquals(999, actual.getNumeric());
-		assertEquals(Assignment.USER_ASSIGNED, actual.getAssignment());
-	}
+    @Test
+    public void testUserAssignedCountryCodeGetByCodeAlpha3() {
+        final CountryCodeInterface expected = createUserAssignedCountryCode();
+        CountryCode.addUserAssigned(expected);
+        final CountryCodeInterface actual = CountryCode.getByCode("ZZZ");
+        assertEquals("ZZ", actual.getAlpha2());
+        assertEquals("ZZZ", actual.getAlpha3());
+        assertEquals(999, actual.getNumeric());
+        assertEquals(Assignment.USER_ASSIGNED, actual.getAssignment());
+    }
 
-	@Test
-	public void testUserAssignedCountryCodeGetByCodeNumeric() {
-		final CountryCodeInterface expected = createUserAssignedCountryCode();
-		CountryCode.addUserAssigned(expected);
-		final CountryCodeInterface actual = CountryCode.getByCode(999);
-		assertEquals("ZZ", actual.getAlpha2());
-		assertEquals("ZZZ", actual.getAlpha3());
-		assertEquals(999, actual.getNumeric());
-		assertEquals(Assignment.USER_ASSIGNED, actual.getAssignment());
-	}
+    @Test
+    public void testUserAssignedCountryCodeGetByCodeNumeric() {
+        final CountryCodeInterface expected = createUserAssignedCountryCode();
+        CountryCode.addUserAssigned(expected);
+        final CountryCodeInterface actual = CountryCode.getByCode(999);
+        assertEquals("ZZ", actual.getAlpha2());
+        assertEquals("ZZZ", actual.getAlpha3());
+        assertEquals(999, actual.getNumeric());
+        assertEquals(Assignment.USER_ASSIGNED, actual.getAssignment());
+    }
 }
