@@ -221,7 +221,6 @@ public class CountryCodeTest
     {
         assertNull(getByCode(""));
     }
-<<<<<<< a311dca4c95035391e90c7b5fba18fa4faa0ff26
 
 
     @Test
@@ -415,7 +414,6 @@ public class CountryCodeTest
         assertEquals(826, CountryCode.UK.getNumeric());
         assertEquals(180, CountryCode.ZR.getNumeric());
     }
-=======
     
 	@Test
 	public void testUserAssignedCountryCodeGetByCodeAlpha2() {
@@ -449,5 +447,4 @@ public class CountryCodeTest
 		assertEquals(999, actual.getNumeric());
 		assertEquals(Assignment.USER_ASSIGNED, actual.getAssignment());
 	}
->>>>>>> Support user-assigned country codes. (See issue #25.)
 }
